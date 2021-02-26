@@ -78,3 +78,5 @@ Once you've started the services, you can open [http://localhost](http://localho
 PHPMyAdmin: `http://localhost/phpmyadmin`
 
 Your files: `http://localhost/~YourUsername`
+
+Now you can change the files in the `src/` folder and see them update on stay-at-home-vesta.
