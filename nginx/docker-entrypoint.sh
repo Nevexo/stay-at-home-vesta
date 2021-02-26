@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/ash
 set -eu
 
 envsubst '${VESTA_USERNAME}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
