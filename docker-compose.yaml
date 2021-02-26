@@ -1,0 +1,47 @@
+version: '3'
+
+volumes:
+  sql:
+  phpmyadmin:
+
+services:
+  vesta_database:
+    image: mariadb:10.1.48-bionic
+    restart: unless-stopped
+    environment: 
+      - MYSQL_USER=${VESTA_USERNAME}
+      - MYSQL_PASSWORD=${VESTA_PASSWD}
+      - MYSQL_ROOT_PASSWORD=${VESTA_PASSWD}
+      - MYSQL_DATABASE=${VESTA_USERNAME}
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: unless-stopped
+    depends_on: 
+      - vesta_database
+    ports:
+      - 8080:80
+    environment: 
+      - PMA_ABSOLUTE_URI=http://localhost/phpmyadmin/
+      - PMA_HOST=vesta_database
+      - MYSQL_ROOT_PASSWORD=${VESTA_PASSWD}
+      - PMA_USERNAME=${VESTA_USERNAME}
+      - PMA_PASSWORD=${VESTA_PASSWD}
+
+  apache:
+    build: php/
+    restart: unless-stopped
+    volumes:
+      - ./src:/var/www/html
+
+  nginx:
+    build: nginx
+    restart: unless-stopped
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf.template:ro
+    environment: 
+      - VESTA_USERNAME=${VESTA_USERNAME}
+    ports:
+      - "80:80"
